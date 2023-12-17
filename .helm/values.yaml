@@ -1,0 +1,39 @@
+app:
+  updateInterval:
+    _default: "60s"
+  api:
+    command: .
+    private_key:
+      _default: -----BEGIN OPENSSH PRIVATE KEY-----
+        -----END OPENSSH PRIVATE KEY-----
+    public_key:
+      _default: "Key"
+  discord:
+    hook_url:
+      _default: "https://discord.com/api/webhooks/hook"
+  db:
+    host:
+      _default: "localhost"
+      dev: "example.example.com"
+      test: "example.example.com"
+      prod: "example.example.com"
+    port:
+      _default: "5555"
+      dev: "23432"
+      test: "23432"
+      prod: "23432"
+    user:
+      _default: "postgres"
+      dev: "example-dev"
+      test: "example-test"
+      prod: "example-prod"
+    name:
+      _default: "example"
+      dev: "example-dev"
+      test: "example-test"
+      prod: "example-prod"
+    pass:
+      _default: "postgres"
+      dev: "exampled"
+      test: "examplet"
+      prod: "examplep"

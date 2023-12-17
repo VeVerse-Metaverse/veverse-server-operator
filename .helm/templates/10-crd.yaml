@@ -1,0 +1,107 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: gameservers.veverse.com
+spec:
+  group: veverse.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                # UUID of the game server
+                id:
+                  type: string
+                # Settings for the game server
+                settings:
+                  type: object
+                  properties:
+                    # This is the key used to authenticate with the Veverse API
+                    api:
+                      type: object
+                      properties:
+                        v1:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                            key:
+                              type: string
+                        v2:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                            # Email of the user to authenticate with the Veverse API
+                            email:
+                              type: string
+                            # Password of the user to authenticate with the Veverse API
+                            password:
+                              type: string
+                    # App metadata for the game server
+                    app:
+                      type: object
+                      properties:
+                        # UUID of the app to start the server, if empty, default app (VeVerse) will be used
+                        id:
+                          type: string
+                    # Release metadata for the game server
+                    release:
+                      type: object
+                      properties:
+                        # UUID of the release to start the server, if empty, the latest release of specified app will be used
+                        id:
+                          type: string
+                    # Settings for the game server players
+                    players:
+                      type: object
+                      properties:
+                        # Maximum number of players allowed to connect to the game server
+                        max:
+                          type: integer
+                    # Game server world settings
+                    world:
+                      type: object
+                      properties:
+                        # UUID of the world to start at the server, if empty, the default world will be used
+                        id:
+                          type: string
+                    # Game server settings
+                    server:
+                      type: object
+                      properties:
+                        # Image pull secret name
+                        imagePullSecrets:
+                          type: array
+                          items:
+                            type: string
+                        # Image of the game server to start
+                        image:
+                          type: string
+                        # Public DNS of the VeVerse server, port is assigned by the operator with the service
+                        host:
+                          type: string
+                # Environment variables that will be passed to the server
+                env:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      value:
+                        type: string
+  scope: Namespaced
+  names:
+    plural: gameservers
+    singular: gameserver
+    kind: GameServer
+    shortNames:
+      - gs

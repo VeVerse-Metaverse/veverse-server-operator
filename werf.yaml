@@ -1,0 +1,6 @@
+project: veverse-server-operator
+configVersion: 1
+
+---
+image: operator
+dockerfile: Dockerfile

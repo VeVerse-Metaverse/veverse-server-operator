@@ -1,0 +1,45 @@
+# app deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      serviceAccountName: {{ template "api.fullname" . }}-acc
+      imagePullSecrets:
+        - name: registrysecret
+      containers:
+        - name: api
+          image: {{ .Values.werf.image.operator }}
+          env:
+            - name: ENVIRONMENT
+              value: {{ .Values.global.env | default "dev" }}
+            - name: UPDATE_INTERVAL
+              value: {{ pluck .Values.global.env .Values.app.updateInterval | first | default .Values.app.updateInterval._default | quote }}
+            - name: NAMESPACE
+              value: {{ .Values.werf.namespace | default "default" }}
+            - name: PRIVATE_KEY
+              value: {{ .Values.global.private_key }}
+            - name: PUBLIC_KEY
+              value: {{ .Values.global.public_key }}
+            - name: DATABASE_HOST
+              value: "{{ pluck .Values.global.env .Values.app.db.host | first | default .Values.app.db.host._default }}"
+            - name: DATABASE_PORT
+              value: "{{ pluck .Values.global.env .Values.app.db.port | first | default .Values.app.db.port._default }}"
+            - name: DATABASE_NAME
+              value: "{{ pluck .Values.global.env .Values.app.db.name | first | default .Values.app.db.name._default }}"
+            - name: DATABASE_USER
+              value: "{{ pluck .Values.global.env .Values.app.db.user | first | default .Values.app.db.user._default }}"
+            - name: DATABASE_PASS
+              value: "{{ pluck .Values.global.env .Values.app.db.pass | first | default .Values.app.db.pass._default }}"
+            - name: DISCORD_HOOK_URL
+              value: "{{ pluck .Values.global.env .Values.app.discord.hook_url | first | default .Values.app.discord.hook_url._default }}"

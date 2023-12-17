@@ -1,0 +1,32 @@
+---
+apiVersion: veverse.com/v1
+kind: GameServer
+metadata:
+  name: "21023FA4-B853-4E85-BE78-7C290C557AF8"
+spec:
+  id: "21023FA4-B853-4E85-BE78-7C290C557AF8"
+  settings:
+    api:
+      v1:
+        url: "https://dev.api.example.com"
+        key: "991545EE238A98"
+      v2:
+        url: "https://dev.api2.example.com"
+        email: "games@example.com"
+        password: "991545EE"
+    app:
+      id: "21023FA4-B853-4E85-BE78-7C290C557AF8"
+    release:
+      id: "21023FA4-B853-4E85-BE78-7C290C557AF8"
+    players:
+      max: 10
+    world:
+      id: "21023FA4-B853-4E85-BE78-7C290C557AF8"
+    server:
+      image: "registry.example.com/artheon/veverse-server:latest"
+      host: "dev.example.com"
+      imagePullSecrets:
+        - "registry_secret"
+  env:
+    - name: "VE_EXAMPLE"
+      value: "example"

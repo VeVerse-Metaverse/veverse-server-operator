@@ -1,0 +1,82 @@
+variables:
+  WERF_VERSION: 1.2 ea
+
+stages:
+  - deploy
+
+# Base deployment
+.deploy:
+  stage: deploy
+  script:
+    - source ~/.bashrc
+    - echo $PATH
+    - type multiwerf && source $(multiwerf use ${WERF_VERSION} --as-file)
+    - type werf && source $(werf ci-env gitlab --as-file)
+    - werf converge
+      --namespace ${CI_NAMESPACE}
+      --set "global.ci_url=$(cut -d / -f 3 <<< $CI_ENVIRONMENT_URL)"
+  tags:
+    - werf
+# Base deployment CRD
+.deployCRD:
+  stage: deploy
+  script:
+    - source ~/.bashrc
+    - echo $PATH
+    - type multiwerf && source $(multiwerf use ${WERF_VERSION} --as-file)
+    - type werf && source $(werf ci-env gitlab --as-file)
+    - werf converge
+      --namespace ${CI_NAMESPACE}
+      --set "global.ci_url=$(cut -d / -f 3 <<< $CI_ENVIRONMENT_URL)"
+      --set "CRD.enabled=true"
+  tags:
+    - werf
+
+Deploy to Dev:
+  extends: .deploy
+  environment:
+    name: dev
+    url: http://dev.example.com
+  variables:
+    CI_NAMESPACE: veverse-gameserver-dev
+  only:
+    - branches
+  when: always
+  tags:
+    - hetzner
+Deploy to Test:
+  extends: .deploy
+  environment:
+    name: test
+    url: http://test.example.com
+  variables:
+    CI_NAMESPACE: veverse-gameserver-test
+  only:
+    - branches
+  when: manual
+  tags:
+    - hetzner
+Deploy to Production:
+  extends: .deploy
+  environment:
+    name: prod
+    url: http://prod.example.com
+  variables:
+    CI_NAMESPACE: veverse-gameserver-prod
+  only:
+    - tags
+  when: manual
+  tags:
+    - hetzner
+Deploy CRD to Production:
+  extends: .deployCRD
+  environment:
+    name: prod
+    url: http://prod.example.com
+  variables:
+    CI_NAMESPACE: veverse-gameserver-prod
+  only:
+    - tags
+  when: manual
+  tags:
+    - hetzner
